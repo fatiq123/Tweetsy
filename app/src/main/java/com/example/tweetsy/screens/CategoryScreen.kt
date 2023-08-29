@@ -98,7 +98,8 @@ fun ApiScreen() {
         if (isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier
-                    .size(64.dp)
+                    .size(64.dp),
+                color = MaterialTheme.colorScheme.primary
             )
         } else {
             Text(text = responseData)
