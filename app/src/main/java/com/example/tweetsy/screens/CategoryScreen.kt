@@ -4,18 +4,28 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,6 +40,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tweetsy.R
 import com.example.tweetsy.viewmodels.CategoryViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun CategoryScreen(onClick: (category: String) -> Unit) {
@@ -37,16 +49,63 @@ fun CategoryScreen(onClick: (category: String) -> Unit) {
     val categoryViewModel: CategoryViewModel = hiltViewModel()
     val categories: State<List<String>> = categoryViewModel.categories.collectAsState()
 
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(8.dp),
-        verticalArrangement = Arrangement.SpaceAround
+    /*this check is simple if the data is not loaded still then show message/progressbar if loaded then show categories*/
+    if (categories.value.isEmpty()) {
+        /* Box(
+             modifier = Modifier.fillMaxSize(1f),
+             contentAlignment = Alignment.Center
+         ) {
+             *//*Text(text = "Loading...", style = MaterialTheme.typography.titleLarge)*//*
+            ApiScreen()
+        }*/
+        ApiScreen()
+    } else {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            contentPadding = PaddingValues(8.dp),
+            verticalArrangement = Arrangement.SpaceAround
+        ) {
+            items(categories.value.distinct()) {
+                CategoryItem(category = it, onClick)
+            }
+        }
+    }
+
+}
+
+
+@Composable
+fun ApiScreen() {
+    var isLoading by remember { mutableStateOf(true) }
+    var responseData by remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(key1 = true) {
+        // Simulating longer API call delay
+        coroutineScope.launch {
+            delay(5000) // Simulating a 5-second API call
+            responseData = "API Response Data"
+            isLoading = false
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
     ) {
-        items(categories.value.distinct()) {
-            CategoryItem(category = it, onClick)
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .size(64.dp)
+            )
+        } else {
+            Text(text = responseData)
         }
     }
 }
+
 
 @Composable
 fun CategoryItem(category: String, onClick: (category: String) -> Unit) {

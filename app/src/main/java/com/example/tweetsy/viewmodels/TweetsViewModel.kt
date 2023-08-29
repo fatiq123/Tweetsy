@@ -21,6 +21,10 @@ class TweetsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            /*
+            we use savedStateHandle to get dynamic behavior of category as NavBackStackEntry uses
+            savedStateHandle to store information of screens. And below we are using key of category to get data of screens
+            */
             val category = savedStateHandle.get<String>("category") ?: "Motivation"
             repository.getTweets(category = category)
         }
