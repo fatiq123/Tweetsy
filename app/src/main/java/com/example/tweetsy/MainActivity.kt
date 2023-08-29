@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.tweetsy.api.TweetsyApi
 import com.example.tweetsy.screens.CategoryScreen
+import com.example.tweetsy.screens.DetailScreen
 import com.example.tweetsy.ui.theme.TweetsyTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
@@ -35,7 +36,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             TweetsyTheme {
-               CategoryScreen()
+//               CategoryScreen()
+                DetailScreen()
             }
         }
     }
