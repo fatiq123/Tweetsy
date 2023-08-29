@@ -26,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tweetsy.R
 import com.example.tweetsy.viewmodels.CategoryViewModel
@@ -33,7 +34,7 @@ import com.example.tweetsy.viewmodels.CategoryViewModel
 @Composable
 fun CategoryScreen(onClick: (category: String) -> Unit) {
 
-    val categoryViewModel: CategoryViewModel = viewModel()
+    val categoryViewModel: CategoryViewModel = hiltViewModel()
     val categories: State<List<String>> = categoryViewModel.categories.collectAsState()
 
     LazyVerticalGrid(
