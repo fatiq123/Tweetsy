@@ -12,6 +12,6 @@ interface TweetsyApi {
     suspend fun getTweets(@Header("X-JSON-Path") category: String): Response<List<Tweet>>   // this header is dynamic type
 
     @GET("/v3/b/64ed74489d312622a397d97d?meta=false")
-    @Headers("X-JSON-Path : tweets..category")           // but this Headers is static type we only want selected categories
+    @Headers("X-JSON-Path: tweets..category")           // but this Headers is static type we only want selected categories
     suspend fun getCategories() : Response<List<String>>
 }
